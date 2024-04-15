@@ -6,13 +6,13 @@ interface IconButtonProps {
 	backgroundColor?: string;
 }
 
-function IconButton({
+const IconButton: React.FC<IconButtonProps> = ({
 	icon,
 	alt,
 	size = "w-16 h-16",
 	borderRadius = "rounded-md",
 	backgroundColor = "bg-[#fff]",
-}: IconButtonProps) {
+}) => {
 	return (
 		<button
 			className={`${backgroundColor} ${borderRadius} ${size} flex justify-center items-center`}
@@ -20,6 +20,6 @@ function IconButton({
 			<img src={icon} alt={alt} />
 		</button>
 	);
-}
+};
 
 export default IconButton;

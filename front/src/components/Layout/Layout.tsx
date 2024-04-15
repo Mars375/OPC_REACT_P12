@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Header, Menu } from "../index";
 import Icon1 from "../../assets/icons/Medidate.svg";
 import Icon2 from "../../assets/icons/Swim.svg";
@@ -6,10 +6,10 @@ import Icon3 from "../../assets/icons/Bike.svg";
 import Icon4 from "../../assets/icons/Dumbell.svg";
 
 interface LayoutProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
-function Layout({ children }: LayoutProps) {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const icons = [
 		{ src: Icon1, alt: "Méditation" },
 		{ src: Icon2, alt: "Natation" },
@@ -22,10 +22,10 @@ function Layout({ children }: LayoutProps) {
 			<Header />
 			<div className='flex'>
 				<Menu icons={icons} />
-				<main>{children}</main>
+				<main className='flex-grow'>{children}</main>
 			</div>
 		</>
 	);
-}
+};
 
 export default Layout;
