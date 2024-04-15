@@ -1,10 +1,10 @@
 import { Layout } from "./components";
-import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
 	return (
 		<Layout>
-			<Profile />
+			<Dashboard />
 		</Layout>
 	);
 }
