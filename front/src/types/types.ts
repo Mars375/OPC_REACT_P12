@@ -16,7 +16,8 @@ export interface KeyData {
 export interface User {
 	id: number;
 	userInfos: UserInfos;
-	todayScore: number;
+	todayScore?: number;
+	score?: number;
 	keyData: KeyData;
 }
 
