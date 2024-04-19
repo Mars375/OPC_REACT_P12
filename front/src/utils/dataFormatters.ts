@@ -1,8 +1,10 @@
+import { ApiService } from "../services/apiService";
 import {
-	User as UserType,
-	UserActivity as UserActivityType,
-	UserAverageSessions as UserAverageSessionType,
-	UserPerformance as UserPerformanceType,
+	UserProps,
+	UserActivityProps,
+	UserAverageSessionsProps,
+	UserPerformanceProps,
+	DataType,
 } from "../types/types";
 
 class UserMainData {
@@ -18,7 +20,7 @@ class UserMainData {
 		lipidCount: number;
 	};
 
-	constructor(data: UserType) {
+	constructor(data: UserProps) {
 		this.id = data.id;
 		this.firstName = data.userInfos.firstName;
 		this.lastName = data.userInfos.lastName;
@@ -32,7 +34,7 @@ class UserActivity {
 	userId: number;
 	sessions: Array<{ day: string; kilogram: number; calories: number }>;
 
-	constructor(data: UserActivityType) {
+	constructor(data: UserActivityProps) {
 		this.userId = data.userId;
 		this.sessions = data.sessions;
 	}
@@ -42,7 +44,7 @@ class UserAverageSessions {
 	userId: number;
 	sessions: Array<{ day: number; sessionLength: number }>;
 
-	constructor(data: UserAverageSessionType) {
+	constructor(data: UserAverageSessionsProps) {
 		this.userId = data.userId;
 		this.sessions = data.sessions;
 	}
@@ -50,46 +52,27 @@ class UserAverageSessions {
 
 class UserPerformance {
 	userId: number;
-	kind: { [key: number]: string };
+	kind: Record<number, string>;
 	data: Array<{ kind: number; value: number }>;
 
-	constructor(data: UserPerformanceType) {
+	constructor(data: UserPerformanceProps) {
 		this.userId = data.userId;
 		this.kind = data.kind;
 		this.data = data.data;
 	}
 }
 
-type DataType =
-	| UserType
-	| UserActivityType
-	| UserAverageSessionType
-	| UserPerformanceType;
-
-type ServiceType =
-	| "getUserData"
-	| "getUserActivity"
-	| "getUserAverageSessions"
-	| "getUserPerformance";
-
-export const formatData = (service: ServiceType, data: DataType[]) => {
+export function formatData(service: keyof ApiService, data: DataType[]) {
 	switch (service) {
 		case "getUserData":
-			return data.map((item: DataType) => new UserMainData(item as UserType));
+			return new UserMainData(data[0] as UserProps);
 		case "getUserActivity":
-			return data.map(
-				(item: DataType) => new UserActivity(item as UserActivityType)
-			);
+			return new UserActivity(data[0] as UserActivityProps);
 		case "getUserAverageSessions":
-			return data.map(
-				(item: DataType) =>
-					new UserAverageSessions(item as UserAverageSessionType)
-			);
+			return new UserAverageSessions(data[0] as UserAverageSessionsProps);
 		case "getUserPerformance":
-			return data.map(
-				(item: DataType) => new UserPerformance(item as UserPerformanceType)
-			);
+			return new UserPerformance(data[0] as UserPerformanceProps);
 		default:
 			return data;
 	}
-};
+}

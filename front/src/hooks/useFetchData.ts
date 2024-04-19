@@ -4,13 +4,7 @@ import { formatData } from "../utils/dataFormatters";
 
 const apiService = new ApiService();
 
-type Service =
-	| "getUserData"
-	| "getUserActivity"
-	| "getUserAverageSessions"
-	| "getUserPerformance";
-
-export const useFetchData = <T>(service: Service, userId: number) => {
+export const useFetchData = <T>(service: keyof ApiService, userId: number) => {
 	const [data, setData] = useState<T | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | unknown>(null);

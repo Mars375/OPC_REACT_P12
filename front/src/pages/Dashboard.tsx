@@ -1,12 +1,16 @@
 import { FC, useEffect, useState } from "react";
-import { User, UserActivity } from "../types/types";
-import { USER_MAIN_DATA, USER_ACTIVITY } from "../services/mockApiService";
-import DailyActivity from "../components/DailyActivity/DailyActivity";
+import { UserProps, UserActivityProps } from "../types/types";
+import { USER_MAIN_DATA, USER_ACTIVITY } from "../__mocks__/mockData";
+import BarChart from "../components/BarChart/BarChart";
+import { formatData } from "../utils/dataFormatters";
 
 const Dashboard: FC = () => {
 	const userId = 1; // Mocked user ID
-	const [user, setUser] = useState<User | null>(null);
-	const [userActivity, setUserActivity] = useState<UserActivity[]>([]);
+	const [user, setUser] = useState<UserProps | null>(null);
+	const [userActivity, setUserActivity] = useState<UserActivityProps>({
+		userId: 0,
+		sessions: [],
+	});
 
 	useEffect(() => {
 		const fetchUser = () => {
@@ -14,11 +18,15 @@ const Dashboard: FC = () => {
 			const userActivity = USER_ACTIVITY.filter(
 				(activity) => activity.userId === userId
 			);
+			const userActivityFormatted = formatData(
+				"getUserActivity",
+				userActivity
+			) as UserActivityProps;
 			if (user) {
 				setUser(user);
 			}
-			if (userActivity) {
-				setUserActivity(userActivity);
+			if (userActivityFormatted) {
+				setUserActivity(userActivityFormatted);
 			}
 		};
 
@@ -38,7 +46,7 @@ const Dashboard: FC = () => {
 						</p>
 					</div>
 					<div className='mt-10'>
-						<DailyActivity data={userActivity} />
+						<BarChart data={userActivity} />
 					</div>
 				</div>
 			) : (

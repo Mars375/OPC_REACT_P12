@@ -1,54 +1,60 @@
 // types.ts
 
-export interface UserInfos {
+export interface UserInfosProps {
 	firstName: string;
 	lastName: string;
 	age: number;
 }
 
-export interface KeyData {
+export interface KeyDataProps {
 	calorieCount: number;
 	proteinCount: number;
 	carbohydrateCount: number;
 	lipidCount: number;
 }
 
-export interface User {
+export interface UserProps {
 	id: number;
-	userInfos: UserInfos;
+	userInfos: UserInfosProps;
 	todayScore?: number;
 	score?: number;
-	keyData: KeyData;
+	keyData: KeyDataProps;
 }
 
-export interface Session {
+export interface SessionProps {
 	day: string;
 	kilogram: number;
 	calories: number;
 }
 
-export interface UserActivity {
+export interface UserActivityProps {
 	userId: number;
-	sessions: Session[];
+	sessions: SessionProps[];
 }
 
-export interface AverageSession {
+export interface AverageSessionProps {
 	day: number;
 	sessionLength: number;
 }
 
-export interface UserAverageSessions {
+export interface UserAverageSessionsProps {
 	userId: number;
-	sessions: AverageSession[];
+	sessions: AverageSessionProps[];
 }
 
-export interface PerformanceData {
+export interface PerformanceDataProps {
 	kind: number;
 	value: number;
 }
 
-export interface UserPerformance {
+export interface UserPerformanceProps {
 	userId: number;
 	kind: Record<number, string>;
-	data: PerformanceData[];
+	data: PerformanceDataProps[];
 }
+
+export type DataType =
+	| UserProps
+	| UserActivityProps
+	| UserAverageSessionsProps
+	| UserPerformanceProps;
