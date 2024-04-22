@@ -1,61 +1,99 @@
 import { FC, useEffect, useState } from "react";
-import { UserProps, UserActivityProps } from "../types/types";
-import { USER_MAIN_DATA, USER_ACTIVITY } from "../__mocks__/mockData";
+import { UserPropsFormatted } from "../types/types";
 import BarChart from "../components/BarChart/BarChart";
-import { formatData } from "../utils/dataFormatters";
+import { useFetchData } from "../hooks/useFetchData";
 
 const Dashboard: FC = () => {
-	const userId = 1; // Mocked user ID
-	const [user, setUser] = useState<UserProps | null>(null);
-	const [userActivity, setUserActivity] = useState<UserActivityProps>({
-		userId: 0,
-		sessions: [],
-	});
+	const [userId, setUserId] = useState<number>();
+	const [inputId, setInputId] = useState("");
+	const [error, setError] = useState({});
+	const [user, setUser] = useState<UserPropsFormatted | null>(null);
+
+	const {
+		data: userData,
+		loading: userLoading,
+		error: userError,
+	} = useFetchData<UserPropsFormatted>(true, "getUserData", userId);
+
+	console.log(userError);
 
 	useEffect(() => {
-		const fetchUser = () => {
-			const user = USER_MAIN_DATA.find((user) => user.id === userId);
-			const userActivity = USER_ACTIVITY.filter(
-				(activity) => activity.userId === userId
-			);
-			const userActivityFormatted = formatData(
-				"getUserActivity",
-				userActivity
-			) as UserActivityProps;
-			if (user) {
-				setUser(user);
-			}
-			if (userActivityFormatted) {
-				setUserActivity(userActivityFormatted);
-			}
-		};
+		if (userData) {
+			setUser(userData);
+		}
+		if (userError) {
+			setError(userError);
+		}
+	}, [userData, userError]);
 
-		fetchUser();
-	}, [userId]);
+	const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setInputId(event.target.value);
+	};
+
+	const handleSubmit = () => {
+		setUserId(Number(inputId));
+	};
+
+	const handleLogout = () => {
+		setUser(null);
+		setUserId(undefined);
+		setInputId("");
+		setError(false);
+		window.location.reload();
+	};
+
 	return (
 		<>
+			{!userId && (
+				<div className='flex flex-col items-center justify-center h-screen'>
+					<input
+						type='text'
+						placeholder='Enter your id'
+						value={inputId}
+						onChange={handleIdChange}
+						className='border-2 border-gray-400 rounded-md px-2 py-1'
+					/>
+					<button
+						onClick={handleSubmit}
+						className='bg-blue-500 text-white px-4 py-2 mt-2 rounded-md'
+					>
+						Submit
+					</button>
+				</div>
+			)}
 			{user ? (
 				<div className='px-28 py-16 min-h-full'>
+					<div className='flex justify-end'>
+						<button
+							onClick={handleLogout}
+							className='bg-red-500 text-white px-4 py-2 rounded-md'
+						>
+							Logout
+						</button>
+					</div>
 					<div className='flex flex-col gap-10'>
 						<h1 className='text-5xl font-medium'>
-							Bonjour{" "}
-							<span className='text-[#ff0101]'>{user.userInfos.firstName}</span>
+							Bonjour <span className='text-[#ff0101]'>{user?.firstName}</span>
 						</h1>
 						<p className='text-lg'>
 							Félicitation ! Vous avez explosé vos objectifs hier 👏
 						</p>
 					</div>
-					<div className='mt-10'>
-						<BarChart data={userActivity} />
-					</div>
+					<div className='mt-10'>{/* <BarChart data={userActivity} /> */}</div>
 				</div>
-			) : (
-				<div className='min-h-full flex items-center justify-center'>
-					<div className='bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-lg p-10'>
-						Désolé, nous n'avons pas pu trouver votre profil utilisateur.
-					</div>
+			) : userLoading ? (
+				<p>Loading ...</p>
+			) : error ? (
+				<div className='flex flex-col items-center justify-center h-screen'>
+					<p className='text-red-500'>{error.toString()}</p>
+					<button
+						onClick={handleLogout}
+						className='bg-red-500 text-white px-4 py-2 rounded-md'
+					>
+						Back
+					</button>
 				</div>
-			)}
+			) : null}
 		</>
 	);
 };

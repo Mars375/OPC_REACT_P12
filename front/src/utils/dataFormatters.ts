@@ -7,71 +7,97 @@ import {
 	DataType,
 } from "../types/types";
 
+const dayMapping = {
+	1: "L",
+	2: "M",
+	3: "Me",
+	4: "J",
+	5: "V",
+	6: "S",
+	7: "D",
+};
+
+const kindMapping = {
+	1: "Cardio",
+	2: "Energie",
+	3: "Endurance",
+	4: "Force",
+	5: "Vitesse",
+	6: "Intensité",
+};
+
 class UserMainData {
-	id: number;
 	firstName: string;
 	lastName: string;
 	age: number;
 	score: number;
-	keyData: {
-		calorieCount: number;
-		proteinCount: number;
-		carbohydrateCount: number;
-		lipidCount: number;
-	};
+	calorieCount: number;
+	proteinCount: number;
+	carbohydrateCount: number;
+	lipidCount: number;
 
 	constructor(data: UserProps) {
-		this.id = data.id;
 		this.firstName = data.userInfos.firstName;
 		this.lastName = data.userInfos.lastName;
 		this.age = data.userInfos.age;
 		this.score = data.todayScore || data.score || 0;
-		this.keyData = data.keyData;
+		this.calorieCount = data.keyData.calorieCount;
+		this.proteinCount = data.keyData.proteinCount;
+		this.carbohydrateCount = data.keyData.carbohydrateCount;
+		this.lipidCount = data.keyData.lipidCount;
 	}
 }
 
 class UserActivity {
-	userId: number;
 	sessions: Array<{ day: string; kilogram: number; calories: number }>;
 
 	constructor(data: UserActivityProps) {
-		this.userId = data.userId;
-		this.sessions = data.sessions;
+		this.sessions = data.sessions.map((session) => {
+			const date = new Date(session.day);
+			const formattedDay = `${date.getDate()} ${date.toLocaleString("fr-FR", {
+				month: "short",
+			})} ${date.getFullYear()}`;
+			return {
+				day: formattedDay,
+				kilogram: session.kilogram,
+				calories: session.calories,
+			};
+		});
 	}
 }
 
 class UserAverageSessions {
-	userId: number;
-	sessions: Array<{ day: number; sessionLength: number }>;
+	sessions: Array<{ day: string; sessionLength: number }>;
 
 	constructor(data: UserAverageSessionsProps) {
-		this.userId = data.userId;
-		this.sessions = data.sessions;
+		this.sessions = data.sessions.map((session) => ({
+			day: dayMapping[session.day as keyof typeof dayMapping],
+			sessionLength: session.sessionLength,
+		}));
 	}
 }
 
 class UserPerformance {
-	userId: number;
-	kind: Record<number, string>;
-	data: Array<{ kind: number; value: number }>;
+	data: Array<{ kind: string; value: number }>;
 
 	constructor(data: UserPerformanceProps) {
-		this.userId = data.userId;
-		this.kind = data.kind;
-		this.data = data.data;
+		this.data = data.data.map((performance) => ({
+			kind: kindMapping[performance.kind as keyof typeof kindMapping],
+			value: performance.value,
+		}));
 	}
 }
 
-export function formatData(service: keyof ApiService, data: DataType[]) {
+export function formatData(service: keyof ApiService, data: DataType) {
 	switch (service) {
 		case "getUserData":
-			return new UserMainData(data[0] as UserProps);
+			return new UserMainData(data as UserProps);
 		case "getUserActivity":
-			return new UserActivity(data[0] as UserActivityProps);
+			return new UserActivity(data as UserActivityProps);
 		case "getUserAverageSessions":
-			return new UserAverageSessions(data[0] as UserAverageSessionsProps);
+			return new UserAverageSessions(data as UserAverageSessionsProps);
 		case "getUserPerformance":
-			return new UserPerformance(data[0] as UserPerformanceProps);
+			return new UserPerformance(data as UserPerformanceProps);
 		default:
 			return data;
 	}
