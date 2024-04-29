@@ -32,8 +32,7 @@ const Dashboard: FC = () => {
 		getUserActivity: UserActivityProps;
 		getUserAverageSessions: UserAverageSessionsProps;
 		getUserPerformance: UserPerformanceProps;
-	} | null>(false, services, userId);
-	console.log(data);
+	} | null>(true, services, userId);
 
 	return (
 		<>
