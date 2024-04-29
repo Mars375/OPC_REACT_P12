@@ -53,12 +53,8 @@ class UserActivity {
 
 	constructor(data: UserActivityProps) {
 		this.sessions = data.sessions.map((session) => {
-			const date = new Date(session.day);
-			const formattedDay = `${date.getDate()} ${date.toLocaleString("fr-FR", {
-				month: "short",
-			})} ${date.getFullYear()}`;
 			return {
-				day: formattedDay,
+				day: session.day.toString().slice(-1),
 				kilogram: session.kilogram,
 				calories: session.calories,
 			};

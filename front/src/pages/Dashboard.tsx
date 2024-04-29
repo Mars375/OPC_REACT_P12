@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { UserPropsFormatted } from "../types/types";
+import { UserActivityProps, UserPropsFormatted } from "../types/types";
 import BarChart from "../components/BarChart/BarChart";
 import { useFetchData } from "../hooks/useFetchData";
 
@@ -8,6 +8,9 @@ const Dashboard: FC = () => {
 	const [inputId, setInputId] = useState("");
 	const [error, setError] = useState({});
 	const [user, setUser] = useState<UserPropsFormatted | null>(null);
+	const [userActivity, setUserActivity] = useState<UserActivityProps | null>(
+		null
+	);
 
 	const {
 		data: userData,
@@ -15,7 +18,20 @@ const Dashboard: FC = () => {
 		error: userError,
 	} = useFetchData<UserPropsFormatted>(true, "getUserData", userId);
 
-	console.log(userError);
+	const {
+		data: userActivityData,
+		loading: userActivityLoading,
+		error: userActivityError,
+	} = useFetchData<UserActivityProps>(true, "getUserActivity", userId);
+
+	useEffect(() => {
+		if (userActivityData) {
+			setUserActivity(userActivityData);
+		}
+		if (userActivityError) {
+			setError(userActivityError);
+		}
+	}, [userActivityData, userActivityError]);
 
 	useEffect(() => {
 		if (userData) {
@@ -79,7 +95,9 @@ const Dashboard: FC = () => {
 							Félicitation ! Vous avez explosé vos objectifs hier 👏
 						</p>
 					</div>
-					<div className='mt-10'>{/* <BarChart data={userActivity} /> */}</div>
+					<div className='mt-10'>
+						{userActivity && <BarChart data={userActivity} />}
+					</div>
 				</div>
 			) : userLoading ? (
 				<p>Loading ...</p>

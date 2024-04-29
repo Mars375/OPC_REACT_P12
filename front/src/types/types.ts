@@ -21,6 +21,18 @@ export interface UserProps {
 	keyData: KeyDataProps;
 }
 
+export interface UserPropsFormatted {
+	firstName: string;
+	lastName: string;
+	age: number;
+	todayScore?: number;
+	score?: number;
+	calorieCount: number;
+	proteinCount: number;
+	carbohydrateCount: number;
+	lipidCount: number;
+}
+
 export interface SessionProps {
 	day: string;
 	kilogram: number;

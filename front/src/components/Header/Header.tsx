@@ -1,7 +1,7 @@
 const Header: React.FC = () => {
 	const navItems = ["Accueil", "Profil", "Réglage", "Communauté"];
 	return (
-		<div className='flex justify-between items-center h-24 bg-[#020203]'>
+		<div className='flex justify-around items-center h-24 bg-[#020203]'>
 			<img src='./logo.png' alt="Logo de l'entreprise" className='h-16 w-44' />
 			<nav className='flex w-9/12 justify-around'>
 				{navItems.map((item, index) => (
