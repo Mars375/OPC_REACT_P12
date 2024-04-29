@@ -2,3 +2,8 @@ export { default as Layout } from "./Layout/Layout";
 export { default as Header } from "./Header/Header";
 export { default as Menu } from "./Menu/Menu";
 export { default as IconButton } from "./IconButton/IconButton";
+export { default as Loader } from "./Loader/Loader";
+export { default as Error } from "./Error/Error";
+export { default as Login } from "./Login/Login";
+export { default as UserGreeting } from "./UserGreeting/UserGreeting";
+export { default as BarChart } from "./BarChart/BarChart";

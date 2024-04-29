@@ -17,7 +17,7 @@ const Menu: React.FC<MenuProps> = ({ icons }) => {
 					<IconButton key={index} icon={icon.src} alt={icon.alt} />
 				))}
 			</div>
-			<p className='text-xs font-medium text-white -rotate-90 text-nowrap'>
+			<p className='text-xs font-medium text-white -rotate-90 text-nowrap pr-4'>
 				Copiryght, SportSee 2020
 			</p>
 		</div>

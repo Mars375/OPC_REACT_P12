@@ -1,74 +1,114 @@
 export const USER_MAIN_DATA = [
 	{
-		id: 1,
+		id: 12,
 		userInfos: {
-			firstName: "Thomas",
-			lastName: "Shelby",
-			age: 33,
+			firstName: "Karl",
+			lastName: "Dovineau",
+			age: 31,
 		},
-		todayScore: 55,
+		todayScore: 0.12,
 		keyData: {
-			calorieCount: 2000,
-			proteinCount: 200,
-			carbohydrateCount: 200,
-			lipidCount: 200,
+			calorieCount: 1930,
+			proteinCount: 155,
+			carbohydrateCount: 290,
+			lipidCount: 50,
 		},
 	},
 	{
-		id: 2,
+		id: 18,
 		userInfos: {
-			firstName: "Arthur",
-			lastName: "Shelby",
-			age: 35,
+			firstName: "Cecilia",
+			lastName: "Ratorez",
+			age: 34,
 		},
-		score: 55,
+		score: 0.3,
 		keyData: {
-			calorieCount: 2000,
-			proteinCount: 200,
-			carbohydrateCount: 200,
-			lipidCount: 200,
+			calorieCount: 2500,
+			proteinCount: 90,
+			carbohydrateCount: 150,
+			lipidCount: 120,
 		},
 	},
 ];
 
 export const USER_ACTIVITY = [
 	{
-		userId: 1,
+		userId: 12,
 		sessions: [
 			{
-				day: "2020-01-01",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-01",
+				kilogram: 80,
+				calories: 240,
 			},
 			{
-				day: "2020-01-02",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-02",
+				kilogram: 80,
+				calories: 220,
 			},
 			{
-				day: "2020-01-03",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-03",
+				kilogram: 81,
+				calories: 280,
 			},
 			{
-				day: "2020-01-04",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-04",
+				kilogram: 81,
+				calories: 290,
 			},
 			{
-				day: "2020-01-05",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-05",
+				kilogram: 80,
+				calories: 160,
 			},
 			{
-				day: "2020-01-06",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-06",
+				kilogram: 78,
+				calories: 162,
 			},
 			{
-				day: "2020-01-07",
-				kilogram: 75,
-				calories: 300,
+				day: "2020-07-07",
+				kilogram: 76,
+				calories: 390,
+			},
+		],
+	},
+	{
+		userId: 18,
+		sessions: [
+			{
+				day: "2020-07-01",
+				kilogram: 70,
+				calories: 240,
+			},
+			{
+				day: "2020-07-02",
+				kilogram: 69,
+				calories: 220,
+			},
+			{
+				day: "2020-07-03",
+				kilogram: 70,
+				calories: 280,
+			},
+			{
+				day: "2020-07-04",
+				kilogram: 70,
+				calories: 500,
+			},
+			{
+				day: "2020-07-05",
+				kilogram: 69,
+				calories: 160,
+			},
+			{
+				day: "2020-07-06",
+				kilogram: 69,
+				calories: 162,
+			},
+			{
+				day: "2020-07-07",
+				kilogram: 69,
+				calories: 390,
 			},
 		],
 	},
@@ -76,7 +116,7 @@ export const USER_ACTIVITY = [
 
 export const USER_AVERAGE_SESSIONS = [
 	{
-		userId: 1,
+		userId: 12,
 		sessions: [
 			{
 				day: 1,
@@ -84,15 +124,48 @@ export const USER_AVERAGE_SESSIONS = [
 			},
 			{
 				day: 2,
-				sessionLength: 45,
+				sessionLength: 23,
 			},
 			{
 				day: 3,
-				sessionLength: 30,
+				sessionLength: 45,
 			},
 			{
 				day: 4,
-				sessionLength: 45,
+				sessionLength: 50,
+			},
+			{
+				day: 5,
+				sessionLength: 0,
+			},
+			{
+				day: 6,
+				sessionLength: 0,
+			},
+			{
+				day: 7,
+				sessionLength: 60,
+			},
+		],
+	},
+	{
+		userId: 18,
+		sessions: [
+			{
+				day: 1,
+				sessionLength: 30,
+			},
+			{
+				day: 2,
+				sessionLength: 40,
+			},
+			{
+				day: 3,
+				sessionLength: 50,
+			},
+			{
+				day: 4,
+				sessionLength: 30,
 			},
 			{
 				day: 5,
@@ -100,11 +173,11 @@ export const USER_AVERAGE_SESSIONS = [
 			},
 			{
 				day: 6,
-				sessionLength: 45,
+				sessionLength: 50,
 			},
 			{
 				day: 7,
-				sessionLength: 30,
+				sessionLength: 50,
 			},
 		],
 	},
@@ -112,7 +185,7 @@ export const USER_AVERAGE_SESSIONS = [
 
 export const USER_PERFORMANCE = [
 	{
-		userId: 1,
+		userId: 12,
 		kind: {
 			1: "cardio",
 			2: "energy",
@@ -123,28 +196,65 @@ export const USER_PERFORMANCE = [
 		},
 		data: [
 			{
-				kind: 1,
-				value: 60,
-			},
-			{
-				kind: 2,
 				value: 80,
+				kind: 1,
 			},
 			{
+				value: 120,
+				kind: 2,
+			},
+			{
+				value: 140,
 				kind: 3,
-				value: 55,
 			},
 			{
+				value: 50,
 				kind: 4,
-				value: 90,
 			},
 			{
+				value: 200,
 				kind: 5,
-				value: 60,
 			},
 			{
+				value: 90,
 				kind: 6,
-				value: 70,
+			},
+		],
+	},
+	{
+		userId: 18,
+		kind: {
+			1: "cardio",
+			2: "energy",
+			3: "endurance",
+			4: "strength",
+			5: "speed",
+			6: "intensity",
+		},
+		data: [
+			{
+				value: 200,
+				kind: 1,
+			},
+			{
+				value: 240,
+				kind: 2,
+			},
+			{
+				value: 80,
+				kind: 3,
+			},
+			{
+				value: 80,
+				kind: 4,
+			},
+			{
+				value: 220,
+				kind: 5,
+			},
+			{
+				value: 110,
+				kind: 6,
 			},
 		],
 	},

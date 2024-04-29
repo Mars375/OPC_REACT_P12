@@ -7,16 +7,27 @@ import {
 import { ApiService } from "../services/apiService";
 
 export const mockApi = async (service: keyof ApiService, userId: number) => {
+	let response;
 	switch (service) {
 		case "getUserData":
-			return USER_MAIN_DATA.find((data) => data.id === userId);
+			response = USER_MAIN_DATA.find((data) => data.id === userId);
+			break;
 		case "getUserActivity":
-			return USER_ACTIVITY.find((data) => data.userId === userId);
+			response = USER_ACTIVITY.find((data) => data.userId === userId);
+			break;
 		case "getUserAverageSessions":
-			return USER_AVERAGE_SESSIONS.find((data) => data.userId === userId);
+			response = USER_AVERAGE_SESSIONS.find((data) => data.userId === userId);
+			break;
 		case "getUserPerformance":
-			return USER_PERFORMANCE.find((data) => data.userId === userId);
+			response = USER_PERFORMANCE.find((data) => data.userId === userId);
+			break;
 		default:
-			return null;
+			response = null;
 	}
+
+	if (response === undefined) {
+		throw new Error(`User with ID ${userId} not found`);
+	}
+
+	return { data: response };
 };

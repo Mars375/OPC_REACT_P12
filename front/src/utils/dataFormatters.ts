@@ -27,24 +27,32 @@ const kindMapping = {
 };
 
 class UserMainData {
-	firstName: string;
-	lastName: string;
-	age: number;
+	userInfos: {
+		firstName: string;
+		lastName: string;
+		age: number;
+	};
 	score: number;
-	calorieCount: number;
-	proteinCount: number;
-	carbohydrateCount: number;
-	lipidCount: number;
+	keyData: {
+		calorieCount: number;
+		proteinCount: number;
+		carbohydrateCount: number;
+		lipidCount: number;
+	};
 
 	constructor(data: UserProps) {
-		this.firstName = data.userInfos.firstName;
-		this.lastName = data.userInfos.lastName;
-		this.age = data.userInfos.age;
+		this.userInfos = {
+			firstName: data.userInfos.firstName,
+			lastName: data.userInfos.lastName,
+			age: data.userInfos.age,
+		};
 		this.score = data.todayScore || data.score || 0;
-		this.calorieCount = data.keyData.calorieCount;
-		this.proteinCount = data.keyData.proteinCount;
-		this.carbohydrateCount = data.keyData.carbohydrateCount;
-		this.lipidCount = data.keyData.lipidCount;
+		this.keyData = {
+			calorieCount: data.keyData.calorieCount,
+			proteinCount: data.keyData.proteinCount,
+			carbohydrateCount: data.keyData.carbohydrateCount,
+			lipidCount: data.keyData.lipidCount,
+		};
 	}
 }
 

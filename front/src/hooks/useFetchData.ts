@@ -7,7 +7,7 @@ const apiService = new ApiService();
 
 export const useFetchData = <T>(
 	mock: boolean,
-	service: keyof ApiService,
+	services: Array<keyof ApiService>,
 	userId: number | undefined
 ) => {
 	const [data, setData] = useState<T | null>(null);
@@ -16,16 +16,26 @@ export const useFetchData = <T>(
 
 	useEffect(() => {
 		if (!userId) {
-			setError("No user id provided");
+			setData(null);
+			setError(null);
 			setLoading(false);
 			return;
 		}
+
 		const fetchData = async () => {
 			try {
-				const reponse = mock
-					? await mockApi(service, userId)
-					: await apiService[service](userId);
-				const formattedData = formatData(service, reponse);
+				const responses = await Promise.all(
+					services.map((s) =>
+						mock ? mockApi(s, userId) : apiService[s](userId)
+					)
+				);
+
+				const formattedData = responses.reduce((acc, response, index) => {
+					const service = services[index];
+					acc[service] = formatData(service, response.data);
+					return acc;
+				}, {});
+
 				setData(formattedData as T);
 			} catch (error: unknown) {
 				setError(error);
@@ -35,7 +45,7 @@ export const useFetchData = <T>(
 		};
 
 		fetchData();
-	}, [mock, service, userId]);
+	}, [mock, services, userId]);
 
 	return { data, loading, error };
 };
