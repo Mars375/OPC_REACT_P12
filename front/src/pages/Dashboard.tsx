@@ -52,7 +52,9 @@ const Dashboard: FC = () => {
 						onLogout={() => setUserId(undefined)}
 					/>
 					<div className='mt-10'>
-						{data?.getUserActivity && <BarChart data={data.getUserActivity} />}
+						{data?.getUserActivity && (
+							<BarChart data={data.getUserActivity.sessions} />
+						)}
 					</div>
 				</div>
 			)}

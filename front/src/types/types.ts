@@ -22,7 +22,7 @@ export interface UserProps {
 }
 
 export interface SessionProps {
-	day: string;
+	day: number;
 	kilogram: number;
 	calories: number;
 }

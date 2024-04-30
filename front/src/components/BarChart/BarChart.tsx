@@ -1,135 +1,214 @@
 import * as d3 from "d3";
-import React, { useEffect, useRef } from "react";
-import { UserActivityProps } from "../../types/types";
+import { useEffect, useRef } from "react";
+import { SessionProps } from "../../types/types";
 
 type DataType = "kilogram" | "calories";
 
-const BarChart = ({ data }: { data: UserActivityProps }) => {
+const BarChart = ({ data }: { data: SessionProps[] }) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 
 	useEffect(() => {
-		// Si la référence svg n'existe pas, on arrête la fonction
+		// Vérifie si la référence svg existe
 		if (!svgRef.current) return;
 
-		const svg = d3.select(svgRef.current);
-		svg.selectAll("*").remove();
+		const margin = { top: 50, left: 50, right: 20, bottom: 20 };
 
-		svg
-			.attr("width", 835)
-			.attr("height", 320)
-			.style("background-color", "#F5F7F9")
+		// Définition des dimensions maximales du graphique
+		const maxWidth = 800;
+		const maxHeight = 400;
+
+		// Calcul des dimensions du graphique en fonction de la taille de la fenêtre
+		const width = Math.min(window.innerWidth * 0.6, maxWidth);
+		const height = Math.min(window.innerHeight * 0.4, maxHeight);
+
+		// Sélection de l'élément SVG et définition de ses attributs
+		const svg = d3
+			.select(svgRef.current)
+			.attr("width", width)
+			.attr("height", height)
+			.style("background-color", "#FBFBFB")
 			.style("border-radius", "5px");
 
-		const g = svg.append("g").attr("transform", "translate(50, 50)");
+		// Suppression de tous les éléments enfants existants dans l'élément SVG
+		svg.selectAll("*").remove();
 
-		// Max des données
-		const minKilogram = d3.min(data.sessions, (d) => d.kilogram) ?? 0;
-		const maxKilogram = d3.max(data.sessions, (d) => d.kilogram) ?? 0;
-		const maxCalories = d3.max(data.sessions, (d) => d.calories) ?? 0;
+		// Création d'un groupe pour le graphique et définition de sa position
+		const g = svg.append("g");
 
-		// Création de l'échelle des abscisses
-		const xScale = d3
-			.scaleBand()
-			.domain(data.sessions.map((d) => d.day))
-			.range([0, 735]);
+		// Calcul des valeurs maximales de kilogrammes et de calories
+		const maxKilogram = d3.max(data, (d) => d.kilogram) ?? 0;
+		const maxCalories = d3.max(data, (d) => d.calories) ?? 0;
 
-		// Échelle pour les kilogrammes
+		// Détermination de l'étendue des données sur l'axe des x
+		const extent = d3.extent(data.map((d) => d.day)) as [number, number];
+
+		// Création de l'échelle linéaire pour l'axe des x
+		const xScale = d3.scaleLinear().domain(extent).range([margin.left, width]);
+
+		// Création de l'échelle linéaire pour l'axe des y (kilogrammes)
 		const yScaleKilogram = d3
 			.scaleLinear()
-			.domain([minKilogram - 1, maxKilogram])
-			.range([220, 0]);
+			.domain([maxKilogram - 12, maxKilogram + 3])
+			.range([height - margin.bottom - 20, 0]);
 
-		// Échelle pour les calories, ajustée pour mieux correspondre à l'échelle des kilogrammes
+		// Création de l'échelle linéaire pour l'axe des y (calories)
 		const yScaleCalories = d3
 			.scaleLinear()
-			.domain([0, maxCalories * 1.5]) // Diviser par un facteur pour réduire l'échelle
-			.range([220, 0]);
+			.domain([0, maxCalories])
+			.range([0, height / 2]);
 
-		// Ajout de l'axe X
+		// Ajout de l'axe des x
 		g.append("g")
-			.call(d3.axisBottom(xScale).tickSize(0).tickPadding(15))
-			.attr("transform", "translate(0, 220)")
-			.attr("color", "#74798C")
+			.call(d3.axisBottom(xScale).ticks(7).tickSize(0).tickPadding(20))
+			.attr("color", "#DEDEDE")
 			.selectAll("text")
-			.attr("font-size", "1rem");
+			.attr("font-size", "1rem")
+			.attr("fill", "#9B9EAC");
 
-		// Ajout de l'axe Y
+		// Ajout de l'axe des y (kilogrammes)
 		const yAxis = g
 			.append("g")
 			.call(d3.axisRight(yScaleKilogram).ticks(3).tickSize(0).tickPadding(20))
-			.attr("transform", "translate(735,0)")
-			.attr("color", "#74798C");
+			.attr("color", "#F5F7F9");
 
-		yAxis.selectAll(".tick text").style("font-size", "16px");
+		// Modification du style des étiquettes de l'axe des y (kilogrammes)
+		yAxis
+			.selectAll(".tick text")
+			.attr("font-size", "16px")
+			.attr("fill", "#9B9EAC");
 
-		// Ajouter des lignes pointillées partant de chaque tick de l'axe Y
+		// Ajout de lignes pointillées pour chaque tick de l'axe des y (kilogrammes)
 		yAxis
 			.selectAll(".tick")
 			.append("line")
-			.attr("x1", -735)
+			.attr("x1", -width)
 			.attr("x2", 0)
 			.attr("y1", 0)
 			.attr("y2", 0)
-			.attr("stroke", "#E0E0E0")
+			.attr("stroke", "#DEDEDE")
 			.attr("stroke-width", 1)
 			.attr("stroke-dasharray", "5,5");
 
-		// Création des barres
-		(["kilogram", "calories"] as DataType[]).forEach(
-			(type: DataType, i: number) => {
-				g.selectAll(`.bar-${type}`)
-					.data(data.sessions)
-					.enter()
-					.append("path")
-					.attr("class", `bar-${type}`)
-					.attr("d", (d) => {
-						const x =
-							(xScale(d.day) as number) +
-							xScale.bandwidth() / 2 +
-							(i * 14 - 7) -
-							3;
-						const y = (type === "kilogram" ? yScaleKilogram : yScaleCalories)(
-							d[type]
-						) as number;
-						const baseY = 222;
-						const height = baseY - y;
-						const width = 6;
-						const radius = 3;
-						return `M${x},${y + radius} 
-                    v-${radius}
-                    a${radius},${radius} 0 0 1 ${radius},${-radius} 
-                    h${width - 2 * radius} 
-                    a${radius},${radius} 0 0 1 ${radius},${radius} 
-                    v${height - radius} 
-                    h-${width} 
-                    z`;
-					})
-					.attr("stroke", type === "kilogram" ? "black" : "red")
-					.attr("fill", type === "kilogram" ? "black" : "red");
-			}
-		);
+		// Création d'un groupe pour chaque paire de barres (kilogrammes et calories)
+		const barGroups = g
+			.selectAll(".bar-group")
+			.data(data)
+			.enter()
+			.append("g")
+			.attr("class", "bar-group")
+			.on("mouseover", function (event, d) {
+				const [x, y] = d3.pointer(event);
+				const xPosition = xScale(+d.day) + 50;
+				const tooltipX = xPosition > width - 100 ? width - 215 : xPosition;
 
+				d3.select(this).selectAll(".hover-rect").style("opacity", 0.2);
+
+				d3.select(this)
+					.selectAll(".tooltip")
+					.style("opacity", 1)
+					.attr("transform", `translate(${tooltipX}, ${y})`);
+			})
+			.on("mouseout", function () {
+				d3.select(this).selectAll(".hover-rect").style("opacity", 0);
+				d3.select(this).selectAll(".tooltip").style("opacity", 0);
+			});
+
+		// Ajout de rectangles de survol pour chaque groupe de barres
+		barGroups
+			.append("rect")
+			.attr("class", "hover-rect")
+			.attr("x", (d) => xScale(+d.day) - 35)
+			.attr("y", 25)
+			.attr("width", 80)
+			.attr("height", height - 100)
+			.attr("fill", "gray")
+			.attr("opacity", 0);
+
+		// Tableau des types de données (kilogrammes et calories)
+		const types: DataType[] = ["kilogram", "calories"];
+
+		// Création des barres de kilogrammes et de calories pour chaque groupe de barres
+		types.forEach((type: DataType, index) => {
+			barGroups
+				.append("path")
+				.attr("class", `bar-${type}`)
+				.attr("d", (d) => {
+					const offset = index === 0 ? -7 : 7;
+					const x = xScale(+d.day) + offset;
+					const y = (type === "kilogram" ? yScaleKilogram : yScaleCalories)(
+						+d[type]
+					);
+					const baseY = height - 100;
+					const barHeight = baseY - y;
+					const barWidth = 6;
+					const radius = 3;
+					return `M${x},${y + radius} 
+              v-${radius}
+              a${radius},${radius} 0 0 1 ${radius},${-radius} 
+              h${barWidth - 2 * radius} 
+              a${radius},${radius} 0 0 1 ${radius},${radius} 
+              v${barHeight - radius} 
+              h-${barWidth} 
+              z`;
+				})
+				.attr("stroke", type === "kilogram" ? "black" : "red")
+				.attr("fill", type === "kilogram" ? "black" : "red");
+		});
+
+		// Création d'un tooltip pour afficher les valeurs de kilogrammes et de calories
+		const tooltip = barGroups
+			.append("g")
+			.attr("class", "tooltip")
+			.attr("opacity", 0);
+
+		tooltip
+			.append("rect")
+			.attr("y", 0)
+			.attr("width", 60)
+			.attr("height", 90)
+			.attr("fill", "red");
+
+		// Tableau des types de données pour les labels du tooltip (kilogrammes et calories)
+		const labels: DataType[] = ["kilogram", "calories"];
+
+		// Création des labels pour chaque type de données dans le tooltip
+		labels.forEach((type: DataType) => {
+			tooltip
+				.append("text")
+				.attr("class", "tooltip-text")
+				.attr("x", 7)
+				.attr("y", type === "kilogram" ? 30 : 70)
+				.style("font-size", "13px")
+				.style("fill", "#fff")
+				.text((d) =>
+					type === "kilogram" ? `${d.kilogram}Kg` : `${d.calories}Kcal`
+				);
+		});
+
+		// Ajout du titre du graphique
 		svg
 			.append("text")
-			.attr("x", 100)
-			.attr("y", 30)
+			.attr("x", width * 0.12)
+			.attr("y", height * 0.09)
 			.text("Activité quotidienne")
 			.style("font-weight", "500");
 
+		// Ajout de la légende
 		const legend = svg.append("g");
 
+		// Création des cercles et des textes de la légende
 		["Poids (kg)", "Calories brûlées (kCal)"].forEach((text, i) => {
 			legend
 				.append("circle")
-				.attr("cx", 555 + i * 105)
-				.attr("cy", 25)
+				.attr("cx", width * 0.67 + i * (width * 0.105))
+				.attr("cy", height * 0.078)
 				.attr("r", 4)
 				.attr("fill", i === 0 ? "black" : "#E60000");
 
 			legend
 				.append("text")
-				.attr("x", 570 + i * 105)
-				.attr("y", 30)
+				.attr("x", width * 0.68 + i * (width * 0.105))
+				.attr("y", height * 0.09)
 				.attr("fill", "#74798C")
 				.style("font-size", "14px")
 				.text(text);
