@@ -102,7 +102,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 			.append("g")
 			.attr("class", "bar-group")
 			.on("mouseover", function (event, d) {
-				const [x, y] = d3.pointer(event);
+				const [, y] = d3.pointer(event);
 				const xPosition = xScale(+d.day) + 50;
 				const tooltipX = xPosition > width - 100 ? width - 170 : xPosition;
 
