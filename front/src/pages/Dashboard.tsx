@@ -46,7 +46,7 @@ const Dashboard: FC = () => {
 					onRetry={() => setUserId(undefined)}
 				/>
 			) : (
-				<div className='px-28 py-16 min-h-full'>
+				<div className='px-14 py-16 min-h-full'>
 					<UserGreeting
 						firstName={data?.getUserData.userInfos.firstName}
 						onLogout={() => setUserId(undefined)}

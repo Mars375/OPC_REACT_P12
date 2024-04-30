@@ -19,7 +19,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 
 		// Calcul des dimensions du graphique en fonction de la taille de la fenêtre
 		const width = Math.min(window.innerWidth * 0.6, maxWidth);
-		const height = Math.min(window.innerHeight * 0.4, maxHeight);
+		const height = Math.min(window.innerHeight * 0.3, maxHeight);
 
 		// Sélection de l'élément SVG et définition de ses attributs
 		const svg = d3
@@ -43,7 +43,10 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 		const extent = d3.extent(data.map((d) => d.day)) as [number, number];
 
 		// Création de l'échelle linéaire pour l'axe des x
-		const xScale = d3.scaleLinear().domain(extent).range([margin.left, width]);
+		const xScale = d3
+			.scaleLinear()
+			.domain(extent)
+			.range([margin.left, width - margin.right - 50]);
 
 		// Création de l'échelle linéaire pour l'axe des y (kilogrammes)
 		const yScaleKilogram = d3
@@ -60,6 +63,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 		// Ajout de l'axe des x
 		g.append("g")
 			.call(d3.axisBottom(xScale).ticks(7).tickSize(0).tickPadding(20))
+			.attr("transform", `translate(0, ${height - margin.bottom - 20})`)
 			.attr("color", "#DEDEDE")
 			.selectAll("text")
 			.attr("font-size", "1rem")
@@ -69,6 +73,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 		const yAxis = g
 			.append("g")
 			.call(d3.axisRight(yScaleKilogram).ticks(3).tickSize(0).tickPadding(20))
+			.attr("transform", `translate(${width - margin.left}, 0)`)
 			.attr("color", "#F5F7F9");
 
 		// Modification du style des étiquettes de l'axe des y (kilogrammes)
@@ -81,8 +86,8 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 		yAxis
 			.selectAll(".tick")
 			.append("line")
-			.attr("x1", -width)
-			.attr("x2", 0)
+			.attr("x1", -width + 100)
+			.attr("x2", -margin.right)
 			.attr("y1", 0)
 			.attr("y2", 0)
 			.attr("stroke", "#DEDEDE")
@@ -99,7 +104,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 			.on("mouseover", function (event, d) {
 				const [x, y] = d3.pointer(event);
 				const xPosition = xScale(+d.day) + 50;
-				const tooltipX = xPosition > width - 100 ? width - 215 : xPosition;
+				const tooltipX = xPosition > width - 100 ? width - 170 : xPosition;
 
 				d3.select(this).selectAll(".hover-rect").style("opacity", 0.2);
 
@@ -118,9 +123,9 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 			.append("rect")
 			.attr("class", "hover-rect")
 			.attr("x", (d) => xScale(+d.day) - 35)
-			.attr("y", 25)
+			.attr("y", 40)
 			.attr("width", 80)
-			.attr("height", height - 100)
+			.attr("height", height - margin.bottom - 58)
 			.attr("fill", "gray")
 			.attr("opacity", 0);
 
@@ -138,7 +143,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 					const y = (type === "kilogram" ? yScaleKilogram : yScaleCalories)(
 						+d[type]
 					);
-					const baseY = height - 100;
+					const baseY = height - margin.bottom - 18;
 					const barHeight = baseY - y;
 					const barWidth = 6;
 					const radius = 3;
@@ -196,19 +201,22 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 		// Ajout de la légende
 		const legend = svg.append("g");
 
+		// Calcul de la position de départ de la légende en fonction de la largeur de l'écran
+		const legendX = window.innerWidth > 1024 ? width * 0.7 : width * 0.65;
+
 		// Création des cercles et des textes de la légende
 		["Poids (kg)", "Calories brûlées (kCal)"].forEach((text, i) => {
 			legend
 				.append("circle")
-				.attr("cx", width * 0.67 + i * (width * 0.105))
-				.attr("cy", height * 0.078)
+				.attr("cx", legendX + (i === 1 ? width * 0.09 : width * 0.09 + -90))
+				.attr("cy", height * 0.08)
 				.attr("r", 4)
 				.attr("fill", i === 0 ? "black" : "#E60000");
 
 			legend
 				.append("text")
-				.attr("x", width * 0.68 + i * (width * 0.105))
-				.attr("y", height * 0.09)
+				.attr("x", legendX + (i === 1 ? width * 0.105 : width * 0.105 + -90))
+				.attr("y", height * 0.1)
 				.attr("fill", "#74798C")
 				.style("font-size", "14px")
 				.text(text);
