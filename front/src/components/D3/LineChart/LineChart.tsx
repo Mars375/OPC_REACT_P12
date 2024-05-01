@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { AverageSessionProps } from "../../../types/types";
 
@@ -75,12 +75,12 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 			// Ligne du graphique
 			const line = d3
 				.line<AverageSessionProps>()
-				.x((d, i) => xScale(i))
+				.x((_d, i) => xScale(i))
 				.y((d) => yScale(d.sessionLength) - 20)
 				.curve(d3.curveMonotoneX);
 
 			// Ajouter la ligne au SVG
-			const path = svg
+			svg
 				.append("path")
 				.datum(data)
 				.attr("d", line)
