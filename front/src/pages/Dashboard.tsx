@@ -51,10 +51,12 @@ const Dashboard: FC = () => {
 						firstName={data?.getUserData.userInfos.firstName}
 						onLogout={() => setUserId(undefined)}
 					/>
-					<div className='mt-10'>
-						{data?.getUserActivity && (
-							<BarChart data={data.getUserActivity.sessions} />
-						)}
+					<div className='flex justify-center'>
+						<div className='mt-10 bg-[#FBFBFB] p-5 max-w-fit'>
+							{data?.getUserActivity && (
+								<BarChart data={data.getUserActivity.sessions} />
+							)}
+						</div>
 					</div>
 				</div>
 			)}

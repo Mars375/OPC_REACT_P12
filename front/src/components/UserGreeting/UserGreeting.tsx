@@ -10,7 +10,7 @@ export default function UserGreeting({
 			<div className='flex justify-end'>
 				<button
 					onClick={onLogout}
-					className='bg-red-500 text-white px-4 py-2 rounded-md'
+					className='bg-[#E60000] text-white px-4 py-2 rounded-md'
 				>
 					Logout
 				</button>
