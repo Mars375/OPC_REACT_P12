@@ -13,6 +13,7 @@ import {
 	Loader,
 	BarChart,
 	UserGreeting,
+	LineChart,
 } from "../components/index";
 
 const Dashboard: FC = () => {
@@ -51,10 +52,15 @@ const Dashboard: FC = () => {
 						firstName={data?.getUserData.userInfos.firstName}
 						onLogout={() => setUserId(undefined)}
 					/>
-					<div className='flex justify-center'>
-						<div className='mt-10 bg-[#FBFBFB] p-5 max-w-fit'>
+					<div className='flex flex-col lg:items-center xl:items-start'>
+						<div className='mt-10 bg-[#FBFBFB] w-full max-w-4xl rounded-md'>
 							{data?.getUserActivity && (
 								<BarChart data={data.getUserActivity.sessions} />
+							)}
+						</div>
+						<div className='mt-10 bg-[#FF0000] lg:w-full xl:w-[258px] rounded-md'>
+							{data?.getUserAverageSessions && (
+								<LineChart data={data.getUserAverageSessions.sessions} />
 							)}
 						</div>
 					</div>

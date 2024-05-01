@@ -6,4 +6,5 @@ export { default as Loader } from "./Loader/Loader";
 export { default as Error } from "./Error/Error";
 export { default as Login } from "./Login/Login";
 export { default as UserGreeting } from "./UserGreeting/UserGreeting";
-export { default as BarChart } from "./BarChart/BarChart";
+export { default as BarChart } from "./D3/BarChart/BarChart";
+export { default as LineChart } from "./D3/LineChart/LineChart";
