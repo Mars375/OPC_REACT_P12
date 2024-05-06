@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { AverageSessionProps } from "../../../types/types";
 
@@ -162,13 +162,13 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 					.attr("height", height + margin.top + margin.bottom)
 					.attr("fill", "rgba(0, 0, 0, 0.5)")
 					.attr("opacity", 0)
+					.attr("opacity", 0)
 					.lower();
 
-				function showTooltip(d, index) {
+				function showTooltip(_d: AverageSessionProps, index: number) {
 					const tooltipWidth = 50;
 					let xPos = xScale(index);
 					const yPos = yScale(d.sessionLength) - 60;
-
 					// Vérifier si le tooltip dépasse du graphique à droite
 					if (xPos + tooltipWidth > width) {
 						xPos -= tooltipWidth; // Afficher à gauche au lieu de la droite
