@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { AverageSessionProps } from "../../../types/types";
 
@@ -76,7 +76,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 			const line = d3
 				.line<AverageSessionProps>()
 				.x((_d, i) => xScale(i))
-				.y((d) => yScale(d.sessionLength) - 20)
+				.y((d) => yScale(d.sessionLength) - 30)
 				.curve(d3.curveMonotoneX);
 
 			// Ajouter la ligne au SVG
@@ -87,6 +87,112 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.attr("stroke", "#fff")
 				.attr("stroke-width", 2)
 				.attr("fill", "none");
+
+			// Sélection des groupes de données
+			const groups = svg
+				.selectAll(".data-group")
+				.data(data)
+				.enter()
+				.append("g")
+				.attr("class", "data-group");
+
+			// Itération sur chaque groupe de données
+			groups.each(function (d, index) {
+				const group = d3.select(this); // Sélection du groupe actuel
+
+				// Ajout d'un rectangle transparent pour la zone de survol
+				group
+					.append("rect")
+					.attr("x", xScale(index))
+					.attr("y", 0)
+					.attr("width", width / 7)
+					.attr("height", height)
+					.attr("fill", "transparent")
+					.attr("opacity", 0)
+					.on("mouseover", () => showTooltip(d, index))
+					.on("mouseout", hideTooltip);
+
+				// Ajouter le tooltip
+				const tooltip = svg
+					.append("g")
+					.attr("class", "tooltip")
+					.attr("opacity", 0)
+					.style("pointer-events", "none");
+
+				tooltip
+					.append("rect")
+					.attr("width", 50)
+					.attr("height", 20)
+					.attr("fill", "#fff");
+
+				tooltip
+					.append("text")
+					.attr("x", 25)
+					.attr("y", 12)
+					.attr("text-anchor", "middle")
+					.attr("dominant-baseline", "middle")
+					.style("font-size", "14px")
+					.text(`${d.sessionLength} min`);
+
+				// Ajouter les cercles pour les points de données
+				group
+					.append("circle")
+					.attr("class", "point")
+					.attr("cx", xScale(index))
+					.attr("cy", yScale(d.sessionLength) - 30)
+					.attr("r", 4)
+					.attr("fill", "#fff")
+					.attr("opacity", 0);
+
+				group
+					.append("circle")
+					.classed("low-opacity-circle", true)
+					.attr("fill", "#fff")
+					.attr("cx", xScale(index))
+					.attr("cy", yScale(d.sessionLength) - 30)
+					.attr("r", 10)
+					.attr("opacity", 0);
+
+				const darkRectangle = svg
+					.append("rect")
+					.attr("class", "dark-rectangle")
+					.attr("x", xScale(index))
+					.attr("y", 0)
+					.attr("width", "100%")
+					.attr("height", height + margin.top + margin.bottom)
+					.attr("fill", "rgba(0, 0, 0, 0.5)")
+					.attr("opacity", 0)
+					.lower();
+
+				function showTooltip(d, index) {
+					const tooltipWidth = 50;
+					let xPos = xScale(index);
+					const yPos = yScale(d.sessionLength) - 60;
+
+					// Vérifier si le tooltip dépasse du graphique à droite
+					if (xPos + tooltipWidth > width) {
+						xPos -= tooltipWidth; // Afficher à gauche au lieu de la droite
+					}
+
+					tooltip
+						.attr("opacity", 1)
+						.attr("transform", `translate(${xPos},${yPos})`);
+
+					// Afficher le point de données lors du survol
+					group.select(".point").attr("opacity", 1);
+					group.select(".low-opacity-circle").attr("opacity", 0.3);
+
+					darkRectangle.transition().attr("opacity", 0.3);
+				}
+
+				function hideTooltip() {
+					tooltip.transition().duration(200).attr("opacity", 0);
+					// Masquer le point de données après le survol
+					group.select(".point").attr("opacity", 0);
+					group.select(".low-opacity-circle").attr("opacity", 0);
+					darkRectangle.transition().attr("opacity", 0);
+				}
+			});
 		};
 
 		// Appeler la fonction de mise à jour initiale du graphique
