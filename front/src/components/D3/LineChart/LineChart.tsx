@@ -21,6 +21,8 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				parseInt(d3.select(svgRef.current).style("width")) -
 				margin.left -
 				margin.right;
+			console.log(width);
+
 			const height = 198;
 
 			// Créer le SVG avec les dimensions calculées
@@ -39,7 +41,15 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.attr("fill", "#fff")
 				.attr("x", margin.left)
 				.attr("y", margin.top)
-				.text("Durée moyenne des sessions")
+				.text("Durée moyenne des ")
+				.style("font-size", "1rem");
+
+			svg
+				.append("text")
+				.attr("fill", "#fff")
+				.attr("x", margin.left)
+				.attr("y", margin.top + 20)
+				.text("sessions")
 				.style("font-size", "1rem");
 
 			// Échelle X

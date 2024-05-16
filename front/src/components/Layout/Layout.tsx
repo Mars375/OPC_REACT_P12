@@ -1,9 +1,6 @@
 import { ReactNode } from "react";
 import { Header, Menu } from "../index";
-import Icon1 from "../../assets/icons/Medidate.svg";
-import Icon2 from "../../assets/icons/Swim.svg";
-import Icon3 from "../../assets/icons/Bike.svg";
-import Icon4 from "../../assets/icons/Dumbell.svg";
+import * as Icons from "../../assets/icons";
 
 interface LayoutProps {
 	children: ReactNode;
@@ -11,10 +8,10 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const icons = [
-		{ src: Icon1, alt: "Méditation" },
-		{ src: Icon2, alt: "Natation" },
-		{ src: Icon3, alt: "Vélo" },
-		{ src: Icon4, alt: "Haltère" },
+		{ src: Icons.MedidateIcon, alt: "Méditation" },
+		{ src: Icons.SwimIcon, alt: "Natation" },
+		{ src: Icons.BikeIcon, alt: "Vélo" },
+		{ src: Icons.DumbellIcon, alt: "Haltère" },
 	];
 
 	return (

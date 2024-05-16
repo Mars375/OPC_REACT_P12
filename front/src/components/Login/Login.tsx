@@ -12,7 +12,7 @@ export default function Login({ onLogin }: { onLogin: (id: string) => void }) {
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center h-full'>
+		<section className='flex flex-col items-center justify-center h-full'>
 			<input
 				type='text'
 				placeholder='Enter your id'
@@ -26,6 +26,6 @@ export default function Login({ onLogin }: { onLogin: (id: string) => void }) {
 			>
 				Submit
 			</button>
-		</div>
+		</section>
 	);
 }
