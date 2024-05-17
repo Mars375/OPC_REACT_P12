@@ -89,6 +89,7 @@ const RadialBarChart = ({ data }: { data: number }) => {
 				.attr("y", height / 2 + margin.bottom - 10)
 				.attr("text-anchor", "middle")
 				.style("font-size", "1.5rem")
+				.style("font-weight", "bold")
 				.style("fill", "#000")
 				.text(`${data * 100}%`);
 
