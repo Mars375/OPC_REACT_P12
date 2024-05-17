@@ -124,7 +124,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 			yAxis
 				.selectAll(".tick")
 				.append("line")
-				.attr("x1", -width + (margin.left + margin.right))
+				.attr("x1", -width + margin.right)
 				.attr("x2", -20)
 				.attr("y1", 0)
 				.attr("y2", 0)

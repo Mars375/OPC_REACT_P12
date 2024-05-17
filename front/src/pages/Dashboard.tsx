@@ -15,6 +15,7 @@ import {
 	BarChart,
 	UserGreeting,
 	LineChart,
+	RadialBarChart,
 	Card,
 } from "../components/index";
 import RadarChart from "../components/D3/RadarChart/RadarChart";
@@ -81,7 +82,7 @@ const Dashboard: FC = () => {
 					onRetry={() => setUserId(undefined)}
 				/>
 			) : (
-				<div className='p-10 min-h-full flex flex-col gap-16'>
+				<div className='p-10 xl:px-20 min-h-full flex flex-col gap-16'>
 					<UserGreeting
 						firstName={data?.getUserData.userInfos.firstName}
 						onLogout={() => setUserId(undefined)}
@@ -94,20 +95,25 @@ const Dashboard: FC = () => {
 								)}
 							</article>
 							<section className='flex flex-col lg:flex-row w-full justify-between gap-3'>
-								<article className='bg-[#FF0000] lg:w-1/3 rounded-md'>
+								<article className='bg-[#FF0000] lg:w-1/3 max-h-64 rounded-md'>
 									{data?.getUserAverageSessions && (
 										<LineChart data={data.getUserAverageSessions.sessions} />
 									)}
 								</article>
-								<article className='bg-[#282D30] lg:w-1/3  rounded-md'>
+								<article className='bg-[#282D30] lg:w-1/3 max-h-64  rounded-md'>
 									{data?.getUserPerformance && (
 										<RadarChart data={data.getUserPerformance} />
 									)}
 								</article>
-								<article className=' bg-[#FBFBFB] lg:w-1/3  rounded-md'></article>
+								<article className=' bg-[#FBFBFB] lg:w-1/3 max-h-64 rounded-md'>
+									{data?.getUserActivity &&
+										data.getUserData.score !== undefined && (
+											<RadialBarChart data={data.getUserData.score} />
+										)}
+								</article>
 							</section>
 						</section>
-						<section className='flex lg:flex-col justify-center lg:justify-between flex-wrap w-fit gap-4'>
+						<section className='flex lg:flex-col justify-center lg:justify-between flex-wrap gap-4 flex-grow-0'>
 							{data?.getUserData &&
 								Object.entries(data.getUserData.keyData).map(([key, value]) => {
 									const unit = key === "calorieCount" ? "kCal" : "g";
