@@ -22,10 +22,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				margin.left -
 				margin.right;
 
-			const height =
-				parseInt(d3.select(svgRef.current).style("height")) -
-				margin.top -
-				margin.bottom;
+			const height = 198;
 
 			// Créer le SVG avec les dimensions calculées
 			const svg = d3

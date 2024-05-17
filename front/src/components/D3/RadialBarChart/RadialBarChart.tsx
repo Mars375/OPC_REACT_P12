@@ -15,10 +15,7 @@ const RadialBarChart = ({ data }: { data: number }) => {
 				parseInt(d3.select(svgRef.current).style("width")) -
 				margin.left -
 				margin.right;
-			const height =
-				parseInt(d3.select(svgRef.current).style("height")) -
-				margin.top -
-				margin.bottom;
+			const height = 198;
 
 			// Create an SVG container
 			const svg = d3
