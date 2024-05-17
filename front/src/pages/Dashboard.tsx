@@ -95,17 +95,17 @@ const Dashboard: FC = () => {
 								)}
 							</article>
 							<section className='flex flex-col lg:flex-row w-full justify-between gap-3'>
-								<article className='bg-[#FF0000] lg:w-1/3 h-64 rounded-md'>
+								<article className='bg-[#FF0000] lg:w-1/3 rounded-md'>
 									{data?.getUserAverageSessions && (
 										<LineChart data={data.getUserAverageSessions.sessions} />
 									)}
 								</article>
-								<article className='bg-[#282D30] lg:w-1/3 h-64  rounded-md'>
+								<article className='bg-[#282D30] lg:w-1/3  rounded-md'>
 									{data?.getUserPerformance && (
 										<RadarChart data={data.getUserPerformance} />
 									)}
 								</article>
-								<article className=' bg-[#FBFBFB] lg:w-1/3 h-64 rounded-md'>
+								<article className=' bg-[#FBFBFB] lg:w-1/3 rounded-md'>
 									{data?.getUserActivity &&
 										data.getUserData.score !== undefined && (
 											<RadialBarChart data={data.getUserData.score} />

@@ -19,10 +19,7 @@ const RadarChart = ({ data }: { data: UserPerformanceProps }) => {
 				parseInt(d3.select(svgRef.current).style("width")) -
 				margin.left -
 				margin.right;
-			const height =
-				parseInt(d3.select(svgRef.current).style("height")) -
-				margin.top -
-				margin.bottom;
+			const height = 198;
 			const radius = Math.min(width, height) / 2;
 
 			// Create an SVG container
