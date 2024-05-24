@@ -6,17 +6,18 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 
 	useEffect(() => {
+		// Check if the svg reference exists and data is not empty
 		if (!svgRef.current || !data.length) return;
 
 		const margin = { top: 30, left: 20, right: 20, bottom: 35 };
 
 		const resizeHandler = () => {
-			// Redessiner le graphique lorsque la taille de l'écran change
+			// Redraw the chart when the screen size changes
 			updateChart();
 		};
 
 		const updateChart = () => {
-			// Déterminer les dimensions en fonction de la taille de l'écran
+			// Determine dimensions based on screen size
 			const width =
 				parseInt(d3.select(svgRef.current).style("width")) -
 				margin.left -
@@ -24,17 +25,17 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 
 			const height = 198;
 
-			// Créer le SVG avec les dimensions calculées
+			// Create the SVG with calculated dimensions
 			const svg = d3
 				.select(svgRef.current)
 				.classed("line-chart-svg", true)
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom);
 
-			// Nettoyer le SVG
+			// Clear the SVG
 			svg.selectAll("*").remove();
 
-			// Ajouter le titre
+			// Add the title
 			svg
 				.append("text")
 				.attr("fill", "#fff")
@@ -51,7 +52,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.text("sessions")
 				.style("font-size", "1rem");
 
-			// Échelle X
+			// X scale
 			const xScale = d3
 				.scaleLinear()
 				.domain([0, 6])
@@ -64,7 +65,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.ticks(7)
 				.tickFormat((_d, i) => data[i].day.toString().substring(0, 1));
 
-			// Ajouter l'axe X
+			// Add the X axis
 			svg
 				.append("g")
 				.call(xAxis)
@@ -74,21 +75,21 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.select(".domain")
 				.remove();
 
-			// Échelle Y
+			// Y scale
 			const domain = d3.max(data, (d) => d.sessionLength) as number;
 			const yScale = d3
 				.scaleLinear()
 				.domain([0, domain * 4])
 				.range([height, margin.top]);
 
-			// Ligne du graphique
+			// Line generator
 			const line = d3
 				.line<AverageSessionProps>()
 				.x((_d, i) => xScale(i))
 				.y((d) => yScale(d.sessionLength) - 30)
 				.curve(d3.curveMonotoneX);
 
-			// Ajouter la ligne au SVG
+			// Add the line to the SVG
 			svg
 				.append("path")
 				.datum(data)
@@ -97,7 +98,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.attr("stroke-width", 2)
 				.attr("fill", "none");
 
-			// Sélection des groupes de données
+			// Select data groups
 			const groups = svg
 				.selectAll(".data-group")
 				.data(data)
@@ -105,11 +106,11 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 				.append("g")
 				.attr("class", "data-group");
 
-			// Itération sur chaque groupe de données
+			// Iterate over each data group
 			groups.each(function (d, index) {
-				const group = d3.select(this); // Sélection du groupe actuel
+				const group = d3.select(this); // Select the current group
 
-				// Ajout d'un rectangle transparent pour la zone de survol
+				// Add a transparent rectangle for hover area
 				group
 					.append("rect")
 					.attr("x", xScale(index))
@@ -121,19 +122,21 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 					.on("mouseover", () => showTooltip(d, index))
 					.on("mouseout", hideTooltip);
 
-				// Ajouter le tooltip
+				// Add the tooltip
 				const tooltip = svg
 					.append("g")
 					.attr("class", "tooltip")
 					.attr("opacity", 0)
 					.style("pointer-events", "none");
 
+				// Add a circle to the tooltip
 				tooltip
 					.append("rect")
 					.attr("width", 50)
 					.attr("height", 20)
 					.attr("fill", "#fff");
 
+				// Add text to the tooltip
 				tooltip
 					.append("text")
 					.attr("x", 25)
@@ -143,7 +146,7 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 					.style("font-size", "14px")
 					.text(`${d.sessionLength} min`);
 
-				// Ajouter les cercles pour les points de données
+				// Add the point to the group
 				group
 					.append("circle")
 					.attr("class", "point")
@@ -174,13 +177,14 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 					.attr("opacity", 0)
 					.lower();
 
+				// Show the tooltip
 				function showTooltip(_d: AverageSessionProps, index: number) {
 					const tooltipWidth = 50;
 					let xPos = xScale(index);
 					const yPos = yScale(d.sessionLength) - 60;
-					// Vérifier si le tooltip dépasse du graphique à droite
+					// Check if the tooltip exceeds the graph to the right
 					if (xPos + tooltipWidth > width) {
-						xPos -= tooltipWidth; // Afficher à gauche au lieu de la droite
+						xPos -= tooltipWidth; // Display to the left instead of the right
 					}
 
 					tooltip
@@ -194,9 +198,10 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 					darkRectangle.transition().attr("opacity", 0.3);
 				}
 
+				// Hide the tooltip
 				function hideTooltip() {
 					tooltip.transition().duration(200).attr("opacity", 0);
-					// Masquer le point de données après le survol
+					// Hide the point after hover
 					group.select(".point").attr("opacity", 0);
 					group.select(".low-opacity-circle").attr("opacity", 0);
 					darkRectangle.transition().attr("opacity", 0);
@@ -204,13 +209,13 @@ const LineChart = ({ data }: { data: AverageSessionProps[] }) => {
 			});
 		};
 
-		// Appeler la fonction de mise à jour initiale du graphique
+		// Initial chart rendering
 		updateChart();
 
-		// Écouter l'événement de redimensionnement de la fenêtre
+		// Add event listener for window resize
 		window.addEventListener("resize", resizeHandler);
 
-		// Retirer l'écouteur d'événement lors du nettoyage
+		// Cleanup event listener on component unmount
 		return () => {
 			window.removeEventListener("resize", resizeHandler);
 		};

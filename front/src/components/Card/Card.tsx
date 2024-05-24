@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
 interface CardProps {
 	icon: string;
@@ -7,6 +7,7 @@ interface CardProps {
 	color: string;
 }
 
+// Card component that displays an icon, value, and description with a background color
 const Card: FC<CardProps> = ({ icon, value, description, color }) => {
 	return (
 		<div className='flex items-center bg-[#FBFBFB] p-8 rounded w-56'>

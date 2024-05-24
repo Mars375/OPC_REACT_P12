@@ -21,7 +21,7 @@ import {
 import RadarChart from "../components/D3/RadarChart/RadarChart";
 
 const Dashboard: FC = () => {
-	const [userId, setUserId] = useState<number | undefined>(undefined);
+	const [userId, setUserId] = useState<number | undefined>(undefined); // State to store the user ID
 	const services: (keyof ApiService)[] = useMemo(
 		() => [
 			"getUserData",
@@ -39,6 +39,7 @@ const Dashboard: FC = () => {
 		getUserPerformance: UserPerformanceProps;
 	} | null>(true, services, userId);
 
+	// Function to get the appropriate icon, description, and color based on the key
 	const getIconAndDescription = (key: string) => {
 		switch (key) {
 			case "calorieCount":
@@ -73,14 +74,14 @@ const Dashboard: FC = () => {
 	return (
 		<>
 			{!userId ? (
-				<Login onLogin={(id: string) => setUserId(Number(id))} />
+				<Login onLogin={(id: string) => setUserId(Number(id))} /> // Show login if no user ID
 			) : loading ? (
-				<Loader />
+				<Loader /> // Show loader while data is being fetched
 			) : error ? (
 				<Error
 					error={(error as Error).message}
 					onRetry={() => setUserId(undefined)}
-				/>
+				/> // Show error if there was an issue fetching data
 			) : (
 				<div className='p-10 xl:px-20 min-h-full flex flex-col gap-16'>
 					<UserGreeting

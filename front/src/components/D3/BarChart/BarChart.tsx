@@ -8,61 +8,61 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 
 	useEffect(() => {
-		// Vérifie si la référence svg existe
+		// Check if the svgRef exists
 		if (!svgRef.current) return;
 
 		const resizeHandler = () => {
-			// Redessiner le graphique lorsque la taille de l'écran change
+			// Redraw the chart when the screen size changes
 			updateChart();
 		};
 
 		const updateChart = () => {
-			// Définition des marges
+			// Define the margins
 			const margin = { top: 50, left: 40, right: 20, bottom: 30 };
 
-			// Calcul des dimensions du graphique en fonction de la taille de la fenêtre
+			// Calculate the chart dimensions based on the window size
 			const width =
 				parseInt(d3.select(svgRef.current).style("width")) -
 				margin.left -
 				margin.right;
 			const height = 263;
 
-			// Sélection de l'élément SVG et définition de ses attributs
+			// Select the SVG element and define its attributes
 			const svg = d3
 				.select(svgRef.current)
 				.attr("width", width)
 				.attr("height", height)
 				.style("border-radius", "5px");
 
-			// Suppression de tous les éléments enfants existants dans l'élément SVG
+			// Remove all existing child elements in the SVG element
 			svg.selectAll("*").remove();
 
-			// Calcul des valeurs maximales de kilogrammes et de calories
+			// Calculate the maximum values of kilograms and calories
 			const maxKilogram = d3.max(data, (d) => d.kilogram) ?? 0;
 			const maxCalories = d3.max(data, (d) => d.calories) ?? 0;
 
-			// Détermination de l'étendue des données sur l'axe des x
+			// Determine the extent of the data on the x axis
 			const extent = d3.extent(data.map((d) => d.day)) as [number, number];
 
-			// Création de l'échelle linéaire pour l'axe des x
+			// Create the linear scale for the x axis
 			const xScale = d3
 				.scaleLinear()
 				.domain(extent)
 				.range([margin.left, width - margin.right]);
 
-			// Création de l'échelle linéaire pour l'axe des y (kilogrammes)
+			// Create the linear scale for the y axis (kilograms)
 			const yScaleKilogram = d3
 				.scaleLinear()
 				.domain([maxKilogram - 12, maxKilogram + 3])
 				.range([height - margin.bottom - 20, 20]);
 
-			// Création de l'échelle linéaire pour l'axe des y (calories)
+			// Create the linear scale for the y axis (calories)
 			const yScaleCalories = d3
 				.scaleLinear()
 				.domain([0, maxCalories])
 				.range([0, height / 2]);
 
-			// Ajout du titre du graphique
+			// Add the chart title
 			svg
 				.append("text")
 				.attr("x", width * 0.05)
@@ -70,14 +70,14 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.text("Activité quotidienne")
 				.style("font-weight", "500");
 
-			// Ajout de la légende
+			// Add the legend
 			const legend = svg.append("g");
 
-			// Calcul de la position de départ de la légende en fonction de la largeur de l'écran
+			// Calculate the starting position of the legend based on the screen width
 			const legendX = window.innerWidth > 1024 ? width * 0.68 : width * 0.65;
 
-			// Création des cercles et des textes de la légende
-			["Poids (kg)", "Calories brûlées (kCal)"].forEach((text, i) => {
+			// Create the circles and text for the legend
+			["Poids (kg)", "Calories brlées (kCal)"].forEach((text, i) => {
 				legend
 					.append("circle")
 					.attr("cx", legendX + (i === 1 ? width * 0.09 : width * 0.09 + -90))
@@ -94,10 +94,10 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 					.text(text);
 			});
 
-			// Création d'un groupe pour le graphique et définition de sa position
+			// Create a group for the chart and define its position
 			const g = svg.append("g").attr("x", margin.left);
 
-			// Ajout de l'axe des x
+			// Add the x axis
 			g.append("g")
 				.call(d3.axisBottom(xScale).ticks(7).tickSize(0).tickPadding(20))
 				.attr("transform", `translate(0, ${height - margin.bottom - 20})`)
@@ -107,20 +107,20 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.attr("font-size", "1rem")
 				.attr("fill", "#9B9EAC");
 
-			// Ajout de l'axe des y (kilogrammes)
+			// Add the y axis (kilograms)
 			const yAxis = g
 				.append("g")
 				.call(d3.axisRight(yScaleKilogram).ticks(3).tickSize(0).tickPadding(10))
 				.attr("transform", `translate(${width - margin.right + 30}, 0)`)
 				.attr("color", "#F5F7F9");
 
-			// Modification du style des étiquettes de l'axe des y (kilogrammes)
+			// Modify the style of the y axis labels (kilograms)
 			yAxis
 				.selectAll(".tick text")
 				.attr("font-size", "16px")
 				.attr("fill", "#9B9EAC");
 
-			// Ajout de lignes pointillées pour chaque tick de l'axe des y (kilogrammes)
+			// Add dotted lines for each tick of the y axis (kilograms)
 			yAxis
 				.selectAll(".tick")
 				.append("line")
@@ -132,7 +132,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.attr("stroke-width", 1)
 				.attr("stroke-dasharray", "5,5");
 
-			// Création d'un groupe pour chaque paire de barres (kilogrammes et calories)
+			// Create a group for each pair of bars (kilograms and calories)
 			const barGroups = g
 				.selectAll(".bar-group")
 				.data(data)
@@ -140,7 +140,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.append("g")
 				.attr("class", "bar-group");
 
-			// Ajout de rectangles de survol pour chaque groupe de barres
+			// Add hover rectangles for each bar group
 			barGroups
 				.append("rect")
 				.attr("class", "hover-rect")
@@ -159,7 +159,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.attr("fill", "gray")
 				.attr("opacity", 0);
 
-			// Création des barres de kilogrammes et de calories pour chaque groupe de barres
+			// Create the kilogram and calories bars for each bar group
 			const types: DataType[] = ["kilogram", "calories"];
 			types.forEach((type: DataType, index) => {
 				barGroups
@@ -208,7 +208,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 					.attr("fill", type === "kilogram" ? "black" : "#E60000");
 			});
 
-			// Création d'un tooltip pour afficher les valeurs de kilogrammes et de calories
+			// Create a tooltip to display the values of kilograms and calories
 			const tooltip = g.append("g").attr("class", "tooltip").attr("opacity", 0);
 
 			tooltip
@@ -217,7 +217,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				.attr("height", 90)
 				.attr("fill", "#E60000");
 
-			// Création des labels pour chaque type de données dans le tooltip
+			// Create labels for each type of data in the tooltip
 			types.forEach((type: DataType, index) => {
 				tooltip
 					.append("text")
@@ -228,7 +228,7 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 					.style("fill", "#fff");
 			});
 
-			// Ajout d'écouteurs d'événements pour afficher et masquer le tooltip
+			// Add event listeners to display and hide the tooltip
 			barGroups
 				.on("mouseover", function (_event, d) {
 					const xPosition = xScale(+d.day) + 20;
@@ -262,13 +262,13 @@ const BarChart = ({ data }: { data: SessionProps[] }) => {
 				});
 		};
 
-		// Appeler la fonction de mise à jour initiale du graphique
+		// Call the initial update chart function
 		updateChart();
 
-		// Écouter l'événement de redimensionnement de la fenêtre
+		// Listen to the window resize event
 		window.addEventListener("resize", resizeHandler);
 
-		// Retirer l'écouteur d'événement lors du nettoyage
+		// Remove the event listener when cleaning up
 		return () => {
 			window.removeEventListener("resize", resizeHandler);
 		};

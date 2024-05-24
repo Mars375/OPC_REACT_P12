@@ -1,8 +1,9 @@
 import axios from "axios";
 
 export class ApiService {
-	private API_URL = "http://localhost:3000";
+	private API_URL = "http://localhost:3000"; // Base URL for the API
 
+	// Fetch user data by userId
 	public async getUserData(userId: number) {
 		try {
 			const response = await axios.get(`${this.API_URL}/user/${userId}`);
@@ -13,6 +14,7 @@ export class ApiService {
 		}
 	}
 
+	// Fetch user activity by userId
 	public async getUserActivity(userId: number) {
 		try {
 			const response = await axios.get(
@@ -25,6 +27,7 @@ export class ApiService {
 		}
 	}
 
+	// Fetch user average sessions by userId
 	public async getUserAverageSessions(userId: number) {
 		try {
 			const response = await axios.get(
@@ -37,6 +40,7 @@ export class ApiService {
 		}
 	}
 
+	// Fetch user performance by userId
 	public async getUserPerformance(userId: number) {
 		try {
 			const response = await axios.get(

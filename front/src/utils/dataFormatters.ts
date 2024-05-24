@@ -7,6 +7,7 @@ import {
 	DataType,
 } from "../types/types";
 
+// Mapping of day numbers to day initials
 const dayMapping = {
 	1: "L",
 	2: "M",
@@ -17,6 +18,7 @@ const dayMapping = {
 	7: "D",
 };
 
+// Mapping of performance kind numbers to kind names
 const kindMapping = {
 	1: "Cardio",
 	2: "Energie",
@@ -26,6 +28,7 @@ const kindMapping = {
 	6: "Intensité",
 };
 
+// Class to format user main data
 class UserMainData {
 	userInfos: {
 		firstName: string;
@@ -56,6 +59,7 @@ class UserMainData {
 	}
 }
 
+// Class to format user activity data
 class UserActivity {
 	sessions: Array<{ day: string; kilogram: number; calories: number }>;
 
@@ -70,6 +74,7 @@ class UserActivity {
 	}
 }
 
+// Class to format user average sessions data
 class UserAverageSessions {
 	sessions: Array<{ day: string; sessionLength: number }>;
 
@@ -81,6 +86,7 @@ class UserAverageSessions {
 	}
 }
 
+// Class to format user performance data
 class UserPerformance {
 	data: Array<{ kind: string; value: number }>;
 
@@ -92,6 +98,7 @@ class UserPerformance {
 	}
 }
 
+// Function to format data based on the service type
 export function formatData(service: keyof ApiService, data: DataType) {
 	switch (service) {
 		case "getUserData":
