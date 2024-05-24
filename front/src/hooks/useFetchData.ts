@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { ApiService } from "../services/apiService";
 import { mockApi } from "../__mocks__/mockApi";
