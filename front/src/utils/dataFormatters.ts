@@ -43,6 +43,10 @@ class UserMainData {
 		lipidCount: number;
 	};
 
+	/**
+	 * Create a UserMainData instance.
+	 * @param {UserProps} data - The user data.
+	 */
 	constructor(data: UserProps) {
 		this.userInfos = {
 			firstName: data.userInfos.firstName,
@@ -63,6 +67,10 @@ class UserMainData {
 class UserActivity {
 	sessions: Array<{ day: string; kilogram: number; calories: number }>;
 
+	/**
+	 * Create a UserActivity instance.
+	 * @param {UserActivityProps} data - The user activity data.
+	 */
 	constructor(data: UserActivityProps) {
 		this.sessions = data.sessions.map((session) => {
 			return {
@@ -78,6 +86,10 @@ class UserActivity {
 class UserAverageSessions {
 	sessions: Array<{ day: string; sessionLength: number }>;
 
+	/**
+	 * Create a UserAverageSessions instance.
+	 * @param {UserAverageSessionsProps} data - The user average sessions data.
+	 */
 	constructor(data: UserAverageSessionsProps) {
 		this.sessions = data.sessions.map((session) => ({
 			day: dayMapping[session.day as keyof typeof dayMapping],
@@ -90,6 +102,10 @@ class UserAverageSessions {
 class UserPerformance {
 	data: Array<{ kind: string; value: number }>;
 
+	/**
+	 * Create a UserPerformance instance.
+	 * @param {UserPerformanceProps} data - The user performance data.
+	 */
 	constructor(data: UserPerformanceProps) {
 		this.data = data.data.map((performance) => ({
 			kind: kindMapping[performance.kind as keyof typeof kindMapping],
@@ -98,7 +114,12 @@ class UserPerformance {
 	}
 }
 
-// Function to format data based on the service type
+/**
+ * Function to format data based on the service type.
+ * @param {keyof ApiService} service - The service type.
+ * @param {DataType} data - The data to format.
+ * @returns {Object} The formatted data.
+ */
 export function formatData(service: keyof ApiService, data: DataType) {
 	switch (service) {
 		case "getUserData":

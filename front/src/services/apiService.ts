@@ -3,8 +3,12 @@ import axios from "axios";
 export class ApiService {
 	private API_URL = "http://localhost:3000"; // Base URL for the API
 
-	// Fetch user data by userId
-	public async getUserData(userId: number) {
+	/**
+	 * Fetch user data by userId
+	 * @param {number} userId - The ID of the user
+	 * @returns {Promise<Object | null>} The user data
+	 */
+	public async getUserData(userId: number): Promise<object | null> {
 		try {
 			const response = await axios.get(`${this.API_URL}/user/${userId}`);
 			return response.data;
@@ -14,8 +18,12 @@ export class ApiService {
 		}
 	}
 
-	// Fetch user activity by userId
-	public async getUserActivity(userId: number) {
+	/**
+	 * Fetch user activity by userId
+	 * @param {number} userId - The ID of the user
+	 * @returns {Promise<Object | null>} The user activity data
+	 */
+	public async getUserActivity(userId: number): Promise<object | null> {
 		try {
 			const response = await axios.get(
 				`${this.API_URL}/user/${userId}/activity`
@@ -27,8 +35,12 @@ export class ApiService {
 		}
 	}
 
-	// Fetch user average sessions by userId
-	public async getUserAverageSessions(userId: number) {
+	/**
+	 * Fetch user average sessions by userId
+	 * @param {number} userId - The ID of the user
+	 * @returns {Promise<Object | null>} The user average sessions data
+	 */
+	public async getUserAverageSessions(userId: number): Promise<object | null> {
 		try {
 			const response = await axios.get(
 				`${this.API_URL}/user/${userId}/average-sessions`
@@ -40,8 +52,12 @@ export class ApiService {
 		}
 	}
 
-	// Fetch user performance by userId
-	public async getUserPerformance(userId: number) {
+	/**
+	 * Fetch user performance by userId
+	 * @param {number} userId - The ID of the user
+	 * @returns {Promise<Object | null>} The user performance data
+	 */
+	public async getUserPerformance(userId: number): Promise<object | null> {
 		try {
 			const response = await axios.get(
 				`${this.API_URL}/user/${userId}/performance`

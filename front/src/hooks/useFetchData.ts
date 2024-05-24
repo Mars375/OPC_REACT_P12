@@ -5,6 +5,14 @@ import { formatData } from "../utils/dataFormatters";
 
 const apiService = new ApiService();
 
+/**
+ * Custom hook to fetch data from API or mock API.
+ * @param {boolean} mock - Whether to use mock API.
+ * @param {Array<keyof ApiService>} services - List of services to fetch data from.
+ * @param {number | undefined} userId - The ID of the user.
+ * @returns {{ data: T | null, loading: boolean, error: string | unknown }} The fetched data, loading status, and error.
+ */
+
 export const useFetchData = <T>(
 	mock: boolean,
 	services: Array<keyof ApiService>,
@@ -33,11 +41,19 @@ export const useFetchData = <T>(
 				);
 
 				// Format the fetched data
-				const formattedData = responses.reduce((acc, response, index) => {
-					const service = services[index];
-					acc[service] = formatData(service, response.data);
-					return acc;
-				}, {});
+				const formattedData = responses.reduce(
+					(acc, response, index) => {
+						const service = services[index];
+						if (response) {
+							(acc as Record<keyof ApiService, any>)[service] = formatData(
+								service,
+								(response as any).data
+							);
+						}
+						return acc;
+					},
+					{} as Record<keyof ApiService, any>
+				);
 
 				setData(formattedData as T); // Set the formatted data
 			} catch (error: unknown) {

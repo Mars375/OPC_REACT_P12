@@ -20,6 +20,10 @@ import {
 } from "../components/index";
 import RadarChart from "../components/D3/RadarChart/RadarChart";
 
+/**
+ * Dashboard component to display user data and analytics.
+ * @returns {JSX.Element} The rendered dashboard component.
+ */
 const Dashboard: FC = () => {
 	const [userId, setUserId] = useState<number | undefined>(undefined); // State to store the user ID
 	const services: (keyof ApiService)[] = useMemo(
@@ -117,7 +121,6 @@ const Dashboard: FC = () => {
 						<section className='flex lg:flex-col justify-center lg:justify-between flex-wrap gap-4 flex-grow-0'>
 							{data?.getUserData &&
 								Object.entries(data.getUserData.keyData).map(([key, value]) => {
-									const unit = key === "calorieCount" ? "kCal" : "g";
 									const { icon, description, color } =
 										getIconAndDescription(key);
 
@@ -125,7 +128,7 @@ const Dashboard: FC = () => {
 										<Card
 											key={key}
 											icon={icon}
-											value={`${value}${unit}`}
+											value={`${value}${key === "calorieCount" ? "kCal" : "g"}`}
 											description={description}
 											color={color}
 										/>
