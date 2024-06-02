@@ -8,10 +8,10 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const icons = [
-		{ src: Icons.MedidateIcon, alt: "Méditation" },
-		{ src: Icons.SwimIcon, alt: "Natation" },
-		{ src: Icons.BikeIcon, alt: "Vélo" },
-		{ src: Icons.DumbellIcon, alt: "Haltère" },
+		{ src: Icons.MedidateIcon, alt: "Méditation", href: "/meditation" },
+		{ src: Icons.SwimIcon, alt: "Natation", href: "/swimming" },
+		{ src: Icons.BikeIcon, alt: "Vélo", href: "/biking" },
+		{ src: Icons.DumbellIcon, alt: "Haltère", href: "/weightlifting" },
 	];
 
 	return (

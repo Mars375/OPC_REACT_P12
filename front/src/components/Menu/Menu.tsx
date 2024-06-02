@@ -3,6 +3,7 @@ import { IconButton } from "../index";
 interface Icon {
 	src: string;
 	alt: string;
+	href: string;
 }
 
 interface MenuProps {
@@ -11,16 +12,18 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = ({ icons }) => {
 	return (
-		<div className='w-28 min-h-[calc(100vh_-_6rem)] bg-[#020203] flex flex-col items-center py-20 justify-between'>
+		<nav className='w-28 min-h-[calc(100vh_-_6rem)] bg-[#020203] flex flex-col items-center py-20 justify-between'>
 			<div className='flex flex-col justify-center gap-5'>
 				{icons.map((icon, index) => (
-					<IconButton key={index} icon={icon.src} alt={icon.alt} />
+					<a key={index} href={icon.href}>
+						<IconButton icon={icon.src} alt={icon.alt} />
+					</a>
 				))}
 			</div>
 			<p className='text-xs font-medium text-white -rotate-90 text-nowrap pr-4'>
 				Copiryght, SportSee 2020
 			</p>
-		</div>
+		</nav>
 	);
 };
 
